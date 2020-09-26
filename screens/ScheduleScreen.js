@@ -1,17 +1,32 @@
 import React, { useContext, useState, useEffect } from 'react';
 import UserContext from '../UserContext';
 import CourseList from '../components/CourseList';
+import { firebase } from '../firebase';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const schedule = {
   "title": "CS Courses for 2018-19"
 };
 
+const fixCourses = json => ({
+  ...json,
+  courses: Object.values(json.courses)
+});
+
 const ScheduleScreen = ({navigation}) => {
   const user = useContext(UserContext);
   const canEdit = user && user.role === 'admin';
 
   const [schedule, setSchedule] = useState({ title: '', courses: [] });
+
+  useEffect(() => {
+    const db = firebase.database().ref();
+    const handleData = snap => {
+      if (snap.val()) setSchedule(fixCourses(snap.val()));
+    }
+    db.on('value', handleData, error => alert(error));
+    return () => { db.off('value', handleData); };
+  }, []);
 
   const view = (course) => {
     navigation.navigate(canEdit ? 'CourseEditScreen' : 'CourseDetailScreen', { course });
