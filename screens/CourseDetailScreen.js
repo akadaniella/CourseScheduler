@@ -12,14 +12,16 @@ const Field = ({label, value}) => {
 
 const CourseDetailScreen = ({route}) => {
   const course = route.params.course;
+  const termMap = { F: 'Fall', W: 'Winter', S: 'Spring'};
 
   const id = "COMP_SCI " + course.id.slice(1) + ":\n" + course.title;
+  const meets = course.meets + "\n" + termMap[course.id.charAt(0)];
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <Field label="Selected Course" value= {id} />
-        <Field label="Meeting Times" value={course.meets} />
+        <Field label="Meeting Times" value={meets} />
       </ScrollView>
     </SafeAreaView>
   );
