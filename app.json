@@ -20,6 +20,7 @@
       "supportsTablet": true
     },
     "web": {
+      "name": "Course Scheduler",
       "favicon": "./assets/favicon.png"
     }
   }
