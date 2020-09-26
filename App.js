@@ -3,7 +3,7 @@ import CourseList from './components/CourseList';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const schedule = {
-  "title": "CS Courses for 2018-2019"
+  "title": "CS Courses for 2018-19"
 };
 
 const App = () => {
