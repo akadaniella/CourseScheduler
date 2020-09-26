@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import UserContext from '../UserContext';
 import CourseList from '../components/CourseList';
-import { firebase } from '../firebase';
+import { firebase } from '../utils/firebase';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const schedule = {

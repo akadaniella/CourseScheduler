@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState} from 'react';
 import Form from '../components/Form';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { firebase } from '../utils/firebase';
 import * as Yup from 'yup';
 
 const validationSchema = Yup.object().shape({
@@ -17,18 +18,28 @@ const validationSchema = Yup.object().shape({
     .label('Title'),
 });
 
-const CourseEditScreen = ({route}) => {
+const CourseEditScreen = ({ navigation, route }) => {
   const course = route.params.course;
   const termMap = { F: 'Fall', W: 'Winter', S: 'Spring'};
+  const [submitError, setSubmitError] = useState('');
 
   const id = "EDIT " + course.id.slice(1) + ":\n" + course.title;
   const meets = course.meets + "\n" + termMap[course.id.charAt(0)];
+
+  async function handleSubmit(values) {
+    const { id, meets, title } = values;
+    const course = { id, meets, title };
+    firebase.database().ref('courses').child(id).set(course).catch(error => {
+      setSubmitError(error.message);
+    });
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <Form initialValues={{id: course.id, meets: course.meets, title: course.title}}
-          validationSchema={validationSchema}>
+          validationSchema={validationSchema}
+          onSubmit={values => handleSubmit(values)}>
           <Form.Field
             name="id"
             leftIcon="identifier"
@@ -47,6 +58,8 @@ const CourseEditScreen = ({route}) => {
             leftIcon="format-title"
             placeholder="Introduction to programming"
           />
+          <Form.Button title={'Update'} />
+          {<Form.ErrorMessage error={submitError} visible={true} />}
         </Form>
       </ScrollView>
     </SafeAreaView>
