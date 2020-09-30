@@ -5,14 +5,14 @@ import { useFormikContext } from 'formik';
 import Colors from './colors';
 
 export default function FormButton({ title, color = 'primary' }) {
-  const { handleSubmit } = useFormikContext();
-
+  const { handleSubmit, values } = useFormikContext();
+  const text = (typeof title === 'string') ? title : title(values)
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor: Colors[color] }]}
       onPress={handleSubmit}
     >
-      <Text style={styles.buttonText}>{title}</Text>
+      <Text style={styles.buttonText}>{text}</Text>
     </TouchableOpacity>
   );
 }
