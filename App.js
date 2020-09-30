@@ -42,11 +42,12 @@ const App = () => {
     <UserContext.Provider value={user}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen style={styles.header}
+          <Stack.Screen
             name="ScheduleScreen"
             component={ScheduleScreen}
             options={({navigation}) => ({
             title: "Schedule",
+            headerTitleStyle: { paddingLeft: '55px' },
             headerRight: () => (
               <SignInButton navigation={navigation} user={user} />
             ),
@@ -70,21 +71,14 @@ const App = () => {
 
 const SignInButton = ({ navigation, user }) => (
   user && user.uid ?
-  <Button title="Logout" color="#448aff"
+  <Button
+    title="Logout"
     onPress={() => firebase.auth().signOut()}
   /> :
-  <Button title="Sign In" color="#448aff"
+  <Button
+    title="Sign In"
     onPress={() => navigation.navigate('SignInScreen')}
   />
 );
-
-const styles = StyleSheet.create({
-  header: {
-    flex: 1,
-    color: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default App;

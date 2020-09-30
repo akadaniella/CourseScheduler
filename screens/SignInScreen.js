@@ -18,17 +18,43 @@ const validationSchema = Yup.object().shape({
     .oneOf([Yup.ref('password'), ''], 'Confirmation password must match password'),
 });
 
-const handleOnSubmit = (values) => {
-    if (values.confirm) {
-        firebase.auth().createUserWithEmailAndPassword(values.email, values.password);
-    }
-    else {
-        firebase.auth().signInWithEmailAndPassword(values.email, values.password);
-    }
-}
-
 const SignInScreen = ({ navigation }) => {
   const [signInError, setSignInError] = useState('')
+
+  const handleOnSubmit = (values) => {
+      if (values.confirm) {
+          firebase.auth().createUserWithEmailAndPassword(values.email, values.password)
+          .then(function(firebaseUser) {
+              navigation.navigate("ScheduleScreen");
+          })
+          .catch(function(error) {
+            if (error.code === 'auth/email-already-in-use'){
+               setSignInError("Account already exists.");
+             }
+            else {
+              setSignInError(error.message);
+            }
+          });
+      }
+      else {
+        firebase.auth().signInWithEmailAndPassword(values.email, values.password)
+           .then(function(firebaseUser) {
+               navigation.navigate("ScheduleScreen");
+           })
+          .catch(function(error) {
+            if (error.code === 'auth/user-not-found'){
+               setSignInError("Account not found. Confirm password to sign up.");
+             }
+            else if (error.code === 'auth/wrong-password'){
+              setSignInError("Wrong password.");
+            }
+            else {
+              setSignInError(error.message);
+            }
+          });
+      }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
